@@ -1,10 +1,84 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<title>like-active</title>
+    <meta charset="utf-8">
+    <title>like-active</title>
+    <meta content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,initial-scale=1.0,user-scalable=no" name="viewport">
+    <style>
+    .HeartAnimation {
+        position: absolute;
+        background-image: url(web_heart_animation_edge.png);
+        background-position: left;
+        background-repeat: no-repeat;
+        /*background-size: 2900%;*/
+        height: 100px;
+        width: 100px;
+        left: 50%;
+        top: 50%;
+        -ms-transform: translate(-50%, -47.5%);
+        transform: translate(-50%, -47.5%)
+    }
+
+    .like-active {
+        animation-timing-function: steps(28);
+        animation-name: heart-burst;
+        animation-duration: .8s;
+        animation-iteration-count: 1;
+        display: inline-block;
+        animation-fill-mode: forwards;
+    }
+    /*.HeartAnimation :hover {*/
+    /*background-position: 3.571428571428571%*/
+    /*}*/
+
+    @keyframes heart-burst {
+        0% {
+            background-position: left
+        }
+        100% {
+            background-position: right
+        }
+    }
+    </style>
 </head>
+
 <body>
-<h1>点赞</h1>
+    <h1>点赞</h1>
+    <div class="HeartAnimation"></div>
+    <script type="text/javascript">
+    function addClass(obj, cls) {
+        var obj_class = obj.className, //获取 class 内容.
+            blank = (obj_class != '') ? ' ' : ''; //判断获取到的 class 是否为空, 如果不为空在前面加个'空格'.
+        added = obj_class + blank + cls; //组合原来的 class 和需要添加的 class.
+        obj.className = added; //替换原来的 class.
+    }
+
+    function removeClass(obj, cls) {
+        var obj_class = ' ' + obj.className + ' '; //获取 class 内容, 并在首尾各加一个空格. ex) 'abc    bcd' -> ' abc    bcd '
+        obj_class = obj_class.replace(/(\s+)/gi, ' '), //将多余的空字符替换成一个空格. ex) ' abc    bcd ' -> ' abc bcd '
+            removed = obj_class.replace(' ' + cls + ' ', ' '); //在原来的 class 替换掉首尾加了空格的 class. ex) ' abc bcd ' -> 'bcd '
+        removed = removed.replace(/(^\s+)|(\s+$)/g, ''); //去掉首尾空格. ex) 'bcd ' -> 'bcd'
+        obj.className = removed; //替换原来的 class.
+    }
+
+    function hasClass(obj, cls) {
+        var obj_class = obj.className, //获取 class 内容.
+            obj_class_lst = obj_class.split(/\s+/); //通过split空字符将cls转换成数组.
+        x = 0;
+        for (x in obj_class_lst) {
+            if (obj_class_lst[x] == cls) { //循环数组, 判断是否包含cls
+                return true;
+            }
+        }
+        return false;
+    }
+    var HeartAnimation = document.getElementsByClassName('HeartAnimation')[0];
+    HeartAnimation.onclick = function() {
+         hasClass(this,'like-active') ? removeClass(this,'like-active') : addClass(this,'like-active')
+
+    }
+    </script>
 </body>
+
 </html>

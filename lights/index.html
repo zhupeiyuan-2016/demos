@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>三色循环</title>
+	<style type="text/css">
+		#traffic > li{
+			display: block;
+		}
+		#traffic span{
+			display: inline-block;
+			width: 50px;
+			height: 50px;
+			background-color: gray;
+			margin: 5px;
+			border-radius: 50%;
+		}
+		#traffic.stop li:nth-child(1) span{
+			background-color: red;
+		}
+		#traffic.pass li:nth-child(2) span{
+			background-color: green;
+		}
+		#traffic.wait li:nth-child(3) span{
+			background-color: blue;
+		}
+	</style>
+</head>
+<body>
+<ul class="wait" id="traffic">
+	<li><span></span></li>
+	<li><span></span></li>
+	<li><span></span></li>
+</ul>
+</body>
+<script type="text/javascript">
+	var traffic = document.getElementById('traffic');
+	// 1.0.0
+	(function resete() {
+		traffic.className = 'stop';
+		setTimeout(function () {
+			traffic.className = 'pass';
+			setTimeout(function(){
+				traffic.className = 'wait';
+				setTimeout(resete,1000)
+			},1000)
+		},1000)
+	})();
+
+	// 过程耦合，如果顺序改变了呢？abc是耦合的，b要知道上一个是a，c要知道上一个是b，状态如果增加了。
+	// 回调？！！！
+	// 2.0.0
+	// var statelist = ['stop','pass','wait'];
+	// var flag = 0;
+	// setInterval(function(){
+	// 	state = statelist[flag];
+	// 	traffic.className = state;
+	// 	flag = (flag + 1) % statelist.length;
+	// },1000)
+	//封装性很差，外部变量暴露，flag, statelist
+	//3.0.0
+	// 	var start = function(traffic,statelist){
+	// 	var flag = 0 ;
+	// 	setInterval(function(){
+	// 		state = statelist[flag];
+	// 		traffic.className = state;
+	// 		flag = (flag + 1) % statelist.length;
+	// 	},2000)
+	// }
+	// start(traffic,['stop','pass','wait']);
+	//可复用性很差，只能实现这个效果，如果状态时长要不等呢？于是我们需要过程抽象
+	//4.0.0
+	// function traffic(el,reset){
+	// 	this.el = el;
+	// 	this.autorest = reset;
+	// 	this.state = [];
+	// }
+	// traffic.prototype.putstate = function(fn) {
+	// 	this.state.push(fn);
+	// };
+	// traffic.prototype.reset = function() {
+	// 	var el = this.el;
+		
+
+	// };
+</script>
+</html>

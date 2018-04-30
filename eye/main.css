@@ -1,0 +1,27 @@
+.move{
+    width: 100vw;
+    height: 100vh;
+    padding: 10% 45%;
+}
+.container{
+    width: 100%;
+    
+}
+.eye{
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    height: 40px;
+    width: 40px;
+    background: #CCC;
+}
+#one,#two{ /*pupil*/
+    position: absolute;
+    bottom: 17px;
+    right: 10px;
+    width: 13px;
+    height: 13px;
+    background: #000;
+    border-radius: 50%;
+    transition: all 1s;
+}  

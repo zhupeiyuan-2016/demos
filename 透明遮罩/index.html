@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>透明遮罩</title>
+  <style>
+    .box{
+      width: 200px;
+      height: 300px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" class="box">
+    <h1 id="titleA">标题</h1>
+    <p>文章内容点击</p>
+  </div>
+  <div id="demo" class="box">
+    <h1 id="titleB">透明遮罩</h1>
+    <p>文章内容点击</p>
+  </div>
+</body>
+<script>
+  const titleA = document.getElementById('titleA');
+  const titleB = document.getElementById('titleB');
+  const demo = document.getElementById('demo')
+  titleA.onclick = function(e){
+    console.log(e.target.innerHTML)
+  }
+  titleB.onclick = function(e){
+    console.log(e.target.innerHTML)
+  }
+  function addMask(el,opacity) {
+    const opacity = opacity||0.2;
+    const rect = el.getBoundingClientRect();
+    const style = el.getComputedStyle(el,null);
+    let mask = document.createElement('div');
+    mask.style.position = 'absolute';
+    mask.style.left = (el.offsetLeft -  parseFloat(style.marginLeft)) + 'px';
+    mask.style.top =  (el.offsetTop - parseFloat(style.marginTop)) + 'px';
+    mask.style.zIndex = 9999;
+    mask.style.opacity = '' + opacity;
+    mask.style.backgroundColor = '#000';
+    mask.style.width = (parseFloat(style.marginLeft) + parseFloat(style.marginRight) + rect.width) + 'px';
+    mask.style.height = (parseFloat(style.marginTop) + parseFloat(style.marginBottom) + rect.height) + 'px';
+    el.parentNode.appendChild(mask);
+  }
+  addMask(demo)
+</script>
+</html>

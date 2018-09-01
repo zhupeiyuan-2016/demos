@@ -9,7 +9,7 @@
 
 该方法返回某元素**相对于**浏览器视窗上下左右的位置。言简意赅为下图
 
-![image-20180901161753408](/Users/zhupeiyuan/Desktop/demos/透明遮罩/assets/image-20180901161753408.png)
+![image-20180901161753408](./assets/image-20180901161753408.png)
 
 ### getComputedStyle
 

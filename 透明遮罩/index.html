@@ -48,5 +48,48 @@
     el.parentNode.appendChild(mask);
   }
   addMask(demo)
+
+  function Printf(){
+    constructor:Printf,
+    this.postA = function(msg){
+      console.log('A:'+msg)
+    }
+
+    this.postB = function(msg){
+      console.log('B:'+msg)
+    }
+
+    this.postC =function(msg){
+      console.log('C:'+msg)
+    },
+
+    this.check =function(){
+      return Math.random() > 0.5;
+    }
+  }
+  function checkfy(obj) {
+  for (var index in obj) {
+    if (index.indexOf('post') === 0 && typeof obj[index] === 'function') {
+      (function (index) {
+        var fn = obj[index];
+        obj[index] = function () {
+          if (obj.check()) {
+            fn.apply(obj, arguments);
+          }
+        };
+      }(index));
+    }
+  }
+}
+  const objA = new Printf();
+  objA.postA('____AAA');
+  objA.postB('____BBB');
+  objA.postC('____CCC');
+  console.log('---------拦截验证功能------------')
+  const objB = new Printf();
+  checkfy(objB)
+  objB.postA('____AAA');
+  objB.postB('____BBB');
+  objB.postC('____CCC');
 </script>
 </html>

@@ -33,20 +33,20 @@
     console.log(e.target.innerHTML)
   }
   function addMask(el,opacity) {
-     opacity = opacity||0.2;
+    opacity = opacity||0.2;
     const rect = el.getBoundingClientRect();
     const style = getComputedStyle(el,null);
-    let mask = document.createElement('div');
+    const mask = document.createElement('div');
     mask.style.position = 'absolute';
     mask.style.left = (el.offsetLeft -  parseFloat(style.marginLeft)) + 'px';
     mask.style.top =  (el.offsetTop - parseFloat(style.marginTop)) + 'px';
     mask.style.zIndex = 9999;
-    mask.style.opacity = '' + opacity;
+    mask.style.opacity =  opacity;
     mask.style.backgroundColor = '#000';
     mask.style.width = (parseFloat(style.marginLeft) + parseFloat(style.marginRight) + rect.width) + 'px';
     mask.style.height = (parseFloat(style.marginTop) + parseFloat(style.marginBottom) + rect.height) + 'px';
     el.parentNode.appendChild(mask);
   }
-  // addMask(demo)
+  addMask(demo)
 </script>
 </html>

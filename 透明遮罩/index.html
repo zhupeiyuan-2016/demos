@@ -33,9 +33,9 @@
     console.log(e.target.innerHTML)
   }
   function addMask(el,opacity) {
-    const opacity = opacity||0.2;
+     opacity = opacity||0.2;
     const rect = el.getBoundingClientRect();
-    const style = el.getComputedStyle(el,null);
+    const style = getComputedStyle(el,null);
     let mask = document.createElement('div');
     mask.style.position = 'absolute';
     mask.style.left = (el.offsetLeft -  parseFloat(style.marginLeft)) + 'px';
@@ -47,6 +47,6 @@
     mask.style.height = (parseFloat(style.marginTop) + parseFloat(style.marginBottom) + rect.height) + 'px';
     el.parentNode.appendChild(mask);
   }
-  addMask(demo)
+  // addMask(demo)
 </script>
 </html>

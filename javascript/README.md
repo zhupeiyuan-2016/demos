@@ -6,6 +6,7 @@
 - [完成一个函数,接受数组作为参数,数组元素为整数或者数组,数组元素包含整数或数组,函数返回扁平化后的数组](#完成一个函数接受数组作为参数数组元素为整数或者数组数组元素包含整数或数组函数返回扁平化后的数组)
 - [编写一个函数实现form的序列化(即将一个表单中的键值序列化为可提交的对象)](编写一个函数实现form的序列化即将一个表单中的键值序列化为可提交的对象)
 - [编写一个函数将列表子元素顺序反转](#编写一个函数将列表子元素顺序反转)
+- [ restArgs函数](# restArgs函数)
 ### 内容
 
 #### 现有一个Printf类,其原型对象上有许多以post开头的方法(如postMsg);另有一拦截函数chekc,只返回ture或false.请设计一个函数,该函数应批量改造原Printf的postXXX方法,在保留其原有功能的同时,为每个postXXX方法增加拦截验证功能,当check返回true时继续执行原postXXX方法,返回false时不再执行原postXXX方法
@@ -166,3 +167,41 @@ function sort(el){
 sort(target)
 </script>
 ```
+
+### restArgs函数
+
+```javascript
+function fn(a, b, ...args) {
+   console.log(args); 
+}
+fn(1, 2, 3, 4, 5)
+
+var func = restArgs(function(a, b, c){
+    console.log(c); // [3, 4, 5]
+})
+func(1, 2, 3, 4, 5)
+function restArgs(func){
+  return function(){
+        // startIndex 表示使用哪个位置的参数用于储存剩余的参数
+        let startIndex = func.length - 1;
+        let length = arguments.length - startIndex;
+        let rest = Array(length)
+        let index = 0;
+        // 使用一个数组储存剩余的参数
+        // 以上面的例子为例，结果为：
+        // rest [3, 4, 5]
+        for (; index < length; index++) {
+            rest[index] = arguments[index + startIndex]
+        }
+        // args [1, 2, undefined]
+        let args = Array(startIndex + 1);
+        for (index = 0; index < startIndex; index++) {
+            args[index] = arguments[index]
+        }
+        // args [1, 2, [3, 4, 5]]
+        args[startIndex] = rest;
+        return func.apply(this, args)
+    }
+}
+```
+

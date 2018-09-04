@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>节流与防抖</title>
+</head>
+<body>
+  <h1>没有防抖:</h1>
+  <input type="text" id="a">
+  <h1>防抖后:</h1>
+  <input type="text" id="b">
+  <h1>节流后:</h1>
+  <input type="text" id="c">
+</body>
+<script>
+  const a = document.getElementById("a");
+  const b = document.getElementById('b');
+  const c = document.getElementById('c');
+  function ajax(e){
+    console.log(e,new Date())
+  }
+  function debounce(fun,time){
+    return function (args) {
+        let that = this
+        clearTimeout(fun.id)
+        fun.id = setTimeout(function () {
+            fun.call(that, args)
+        },time)
+    }
+  }
+  function throttle(fun, delay) {
+        let last, deferTimer
+        return function (args) {
+            let that = this
+            let _args = arguments
+            let now = +new Date()
+            if (last && now < last + delay) {
+                clearTimeout(deferTimer)
+                deferTimer = setTimeout(function () {
+                    last = now
+                    fun.apply(that, _args)
+                }, delay)
+            }else {
+                last = now
+                fun.apply(that,_args)
+            }
+        }
+    }
+  a.addEventListener('keyup',function(e){
+    ajax(e.target.value)
+  })
+  let debounceAjax = debounce(ajax,1000)
+  b.addEventListener('keyup',function(e){ 
+    debounceAjax(e.target.value)
+  })
+  let throttleAjax = throttle(ajax, 1000)
+  c.addEventListener('keyup',function(e){
+    throttleAjax(e.target.value)
+  })
+
+</script>
+</html>

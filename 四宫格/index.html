@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>哈哈</title>
+  <style>
+      .box{
+          width: 100px;
+          height: 100px;
+      }
+  </style>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+<script>
+const root = document.getElementById('root')
+const list = ['#faa755','#007d65','#d5c59f','#00ae9d'];
+function init(root,list,sum,floors,...arg) {
+    let flag = 0;
+    for(let i = 0 ; i < floors ; i++){
+        let parent = document.createDocumentFragment();
+        for(let j = 0 ; j < sum / floors;j++){
+            let son = document.createElement('div');
+            son.className = 'box';
+            son.style.float = 'left'; 
+            flag = (flag + 1)%list.length;
+            son.style.backgroundColor = list[flag];
+            parent.appendChild(son)
+        }
+        let clear = document.createElement('div');
+        clear.style.clear = 'both';
+        parent.appendChild(clear)
+        root.appendChild(parent)
+    }
+}
+init(root,list,4,2)
+</script>
+</html>

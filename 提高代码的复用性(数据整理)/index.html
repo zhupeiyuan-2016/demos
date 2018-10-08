@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>提高代码的复用性(数据整理)</title>
+</head>
+<body>
+  <h1>查看控制台</h1>  
+</body>
+</html>
+<script>
+//模拟数据
+const dataOne = [
+    {
+    	warnType: 1,
+    	warnCondition: 220,
+    },
+    {
+    	warnType: 2,
+    	warnCondition: 36,
+    },
+    {
+    	warnType: 3,
+    	warnCondition: 45,
+    },
+    {
+    	warnType: 4,
+    	warnCondition: 110,
+    },
+    {
+    	warnType: 5,
+    	warnCondition: 380,
+    }
+]
+dataOne.forEach(item =>{
+    switch(item.warnType){
+        case 1:
+            item.warnTypeText = '超压'
+            item.warnConditionText = `电压高于${item.warnCondition}V`;
+            break;
+        case 2:
+    		item.warnTypeText = '欠压';
+    		item.warnConditionText = `电压低于${item.warnCondition}V`
+    		break
+    	case 3:
+    		item.warnTypeText = '超载';
+    		item.warnConditionText = `电流高于${item.warnCondition}A`
+    		break
+    	case 4:
+    		item.warnTypeText = '电压不平衡';
+    		item.warnConditionText = `电压不平衡高于${item.warnCondition}%`
+    		break
+    	case 5:
+    		item.warnTypeText = '电流不平衡';
+    		item.warnConditionText = `电流不平衡${item.warnCondition}%`
+    		break;
+    }
+})
+console.log(dataOne)
+//太多的case赋值，可进行进一步复用----保持函数的单一职责，灵活组合
+const dataTwo=[
+    {
+        id:1,
+        status:0,
+        startTime:1538323200000,
+    },
+    {
+        id:2,
+        status:2,
+        startTime:1538523200000,
+    },
+    {
+        id:3,
+        status:1,
+        startTime:1538723200000,
+    },
+    {
+        id:4,
+        status:'',
+        startTime:'',
+    },
+];
+
+/*const _status = {
+    0:'进行中',
+	1:'已完成',
+	2:'订单异常'
+}
+dataTwo.forEach(item =>{
+    item.status = item.status.toString()?_status[item.status]:'';
+    item.startTime = item.startTime.toString()?new Date(item.startTime).toLocaleDateString().replace(/\//g,'-'):'';
+   for(let key in item){
+       if(item[key]===''){
+           item[key]='--';
+       }
+   }
+})
+console.log(dataTwo)*/
+ //现在如果来了一个新的服务端请求回来的用户数据，用户数据没有 status，startTime，两个字段，而且需要根据 type 对应显示用户的身份（0-普通用户，1-vip，2-超级vip）那么就需要重新更改原来的代码，所以我们可以再进行一波重新写。
+const dataThree=[
+	{
+		id:1,
+		name:'守候',
+		type:0
+	},
+	{
+		id:2,
+		name:'浪迹天涯',
+		type:1
+	},
+	{
+		id:3,
+		name:'曾经',
+		type:2
+	}
+]
+//设置 status，startTime，type，-- 。这里拆分成四个函数。
+const handleFn = {
+    setStatus(list){
+        let _status = {
+            0:'进行中',
+			1:'已完成',
+			2:'订单异常' 
+        };
+        list.forEach(item =>{
+            item.status=item.status.toString()?_status[item.status]:'';
+        })
+        return list; 
+    },
+    setStartTime(list){
+        list.forEach( item => {
+            item.startTime=item.startTime.toString()?new Date(item.startTime).toLocaleDateString().replace(/\//g,'-'):'';
+        }) 
+        return list;
+    },
+    setInfo(list){
+		list.forEach(item=>{
+			for(let key in item){
+		        if(item[key]===''){
+		            item[key]='--';
+		        }
+		    }
+		})
+		return list;
+	},
+	setType(list){
+		let _type={
+			0:'普通用户',
+			1:'vip',
+			2:'超级vip'
+		}
+		list.forEach(item=>{
+			item.type=item.type.toString()?_type[item.type]:'';
+		})
+		return list;
+	}
+}
+
+/*let tempOne = handleFn.setStatus(dataTwo);
+tempOne = handleFn.setStartTime(dataTwo);
+tempOne = handleFn.setInfo(dataTwo);
+console.log(tempOne)
+let tempTwo = handleFn.setType(dataThree)
+tempTwo = handleFn.setInfo(dataThree);
+console.log(tempTwo)*/
+let ec=(function () {
+    let handle=function (obj) {
+    	//深拷贝对象
+        this.obj=JSON.parse(JSON.stringify(obj));
+        //记录要处理的步骤
+        this.handleFnList=[];
+    };
+    handle.prototype={
+        /**
+         * @description 设置保密信息
+         */
+        handleSetInfo(item){
+            for(let key in item){
+                if(item[key]===''){
+                    item[key]='--';
+                }
+            }
+            return this;
+        },
+        setInfo(){
+			this.handleFnList.push('handleSetInfo');
+			return this;
+		},
+        /**
+         * @description 设置状态
+         */
+       	handleSetStatus(item){
+       		let _status={
+       			0:'进行中',
+       			1:'已完成',
+       			2:'订单异常'
+       		}
+            item.status=item.status.toString()?_status[item.status]:''
+            return item;
+       	},
+       	setStatus(){
+			this.handleFnList.push('handleSetStatus');
+			return this;
+		},
+       	/**
+         * @description 设置时间
+         */
+       	handleSetStartTime(item){
+            item.startTime=item.startTime.toString()?new Date(item.startTime).toLocaleDateString().replace(/\//g,'-'):'';
+            return item;
+       	},
+       	setStartTime(){
+			this.handleFnList.push('handleSetStartTime');
+			return this;
+		},
+       	/**
+         * @description 设置type
+         */
+       	handleSetType(item){
+			let _type={
+				0:'普通用户',
+				1:'vip',
+				2:'超级vip'
+			}
+			item.type=item.type.toString()?_type[item.type]:'';
+			return item;
+		},
+		setType(){
+			this.handleFnList.push('handleSetType');
+			return this;
+		},
+        /**
+         * @description 返回处理结果
+         * @return {Array|*}
+         */
+        end(){
+            //统一处理操作
+        	this.obj.forEach(item=>{
+        		this.handleFnList.forEach(fn=>{
+        			item=this[fn](item);
+        		})
+        	})
+            return this.obj;
+        }
+    }
+    //暴露构造函数接口
+    return function (obj) {
+        return new handle(obj);
+    }
+})();
+            //处理订单数据
+let orderList=ec(dataTwo).setStatus().setStartTime().setInfo().end();
+console.log(orderList);
+//处理用户数据
+let userList=ec(dataThree).setType().end();
+console.log(userList);
+</script>

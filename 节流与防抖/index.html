@@ -18,8 +18,8 @@
   const a = document.getElementById("a");
   const b = document.getElementById('b');
   const c = document.getElementById('c');
-  function ajax(e){
-    console.log(e,new Date())
+  function ajax(){
+    console.log(new Date())
   }
   function debounce(fun,time){
     return function (args) {
@@ -51,9 +51,11 @@
   a.addEventListener('keyup',function(e){
     ajax(e.target.value)
   })
-  let debounceAjax = debounce(ajax,1000)
-  b.addEventListener('keyup',function(e){ 
-    debounceAjax(e.target.value)
+  // let debounceAjax = debounce(ajax,1000)
+  b.addEventListener('keyup',function(e){
+    let debounceAjax = debounce(ajax,1000)
+    debounceAjax();
+    // debounceAjax(e.target.value)
   })
   let throttleAjax = throttle(ajax, 1000)
   c.addEventListener('keyup',function(e){
